@@ -1,11 +1,19 @@
 package main
 
-import "net/http"
+import (
+	"fmt"
+	"html/template"
+	"os"
+)
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello Go!"))
-	})
-	// nil uses Default mux which is basically default instance of server.
-	http.ListenAndServe(":8080", nil)
+	templateString := `Lemonade Stand Supply`
+	t, err := template.New("title").Parse(templateString)
+	if err != nil {
+		fmt.Println(err)
+	}
+	err = t.Execute(os.Stdout, nil)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
