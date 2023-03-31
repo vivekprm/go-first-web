@@ -19,6 +19,8 @@ func main() {
 		switch requestedFile {
 		case "shop":
 			context = viewmodel.NewShop()
+		case "home":
+			context = viewmodel.NewHome()	
 		default:
 			context = viewmodel.NewBase()
 		}
