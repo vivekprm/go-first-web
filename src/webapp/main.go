@@ -7,40 +7,20 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/vivekprm/go-first-web/src/webapp/viewmodel"
+	"github.com/vivekprm/go-first-web/src/webapp/controller"
 )
 
 func main() {
 	templates := populateTemplates()
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		requestedFile := r.URL.Path[1:]
-		t := templates[requestedFile + ".html"]
-		var context interface{}
-		switch requestedFile {
-		case "shop":
-			context = viewmodel.NewShop()
-		case "home":
-			context = viewmodel.NewHome()	
-		default:
-			context = viewmodel.NewBase()
-		}
-		if t != nil {
-			err := t.Execute(w, context)
-			if err != nil {
-				log.Println(err)
-			}
-		} else {
-			w.WriteHeader(http.StatusNotFound)
-		}
-	})
-	http.Handle("/img/", http.FileServer(http.Dir("public")))
-	http.Handle("/css/", http.FileServer(http.Dir("public")))
+	controller.Startup(templates)
 	http.ListenAndServe(":8080", nil)
 }
 
 func populateTemplates() map[string]*template.Template{
 	result := make(map[string]*template.Template)
 	const basePath = "templates"
+	d, _ := os.Getwd()
+	log.Printf("current wd: %s\n", d)
 	layout := template.Must(template.ParseFiles(basePath + "/_layout.html"))
 	template.Must(layout.ParseFiles(basePath + "/_header.html", basePath + "/_footer.html"))
 
