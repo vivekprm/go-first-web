@@ -15,6 +15,7 @@ func Startup(templates map[string]*template.Template) {
 	homeController.registerRoutes()
 
 	shopController.shopTemplate = templates["shop.html"]
+	shopController.categoryTemplate = templates["shop_details.html"]
 	shopController.registerRoutes()
 
 	http.Handle("/img/", http.FileServer(http.Dir("public")))
