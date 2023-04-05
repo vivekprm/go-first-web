@@ -3,7 +3,6 @@ package main
 import (
 	"html/template"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 
@@ -19,8 +18,6 @@ func main() {
 func populateTemplates() map[string]*template.Template{
 	result := make(map[string]*template.Template)
 	const basePath = "templates"
-	d, _ := os.Getwd()
-	log.Printf("current wd: %s\n", d)
 	layout := template.Must(template.ParseFiles(basePath + "/_layout.html"))
 	template.Must(layout.ParseFiles(basePath + "/_header.html", basePath + "/_footer.html"))
 
