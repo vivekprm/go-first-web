@@ -18,7 +18,6 @@ type home struct {
 func (h home) registerRoutes() {
 	http.HandleFunc("/", h.handleHome)
 	http.HandleFunc("/home", h.handleHome)
-	http.HandleFunc("/stand-locator", h.handleStandLocator)
 	http.HandleFunc("/login", h.handleLogin)
 }
 
