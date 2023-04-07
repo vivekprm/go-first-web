@@ -23,6 +23,8 @@ func (h home) registerRoutes() {
 
 func (h home) handleHome(w http.ResponseWriter, r *http.Request) {
 	vm := viewmodel.NewHome()
+	// To test TimeoutMiddleware
+	// time.Sleep(4 * time.Second)
 	h.homeTemplate.Execute(w, vm)
 }
 
