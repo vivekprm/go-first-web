@@ -20,8 +20,6 @@ func (tm TimeoutMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// replace request with new context
 	r.WithContext(ctx)
 
-	<- ctx.Done()
-
 	ch := make(chan struct{})
 
 	go func ()  {
