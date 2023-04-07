@@ -16,23 +16,18 @@ func (tm TimeoutMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx := r.Context()
-	ctx, _ = context.WithTimeout(ctx, 3 * time.Second)
-	// replace request with new context
+	ctx, _ = context.WithTimeout(ctx, 3*time.Second)
 	r.WithContext(ctx)
-
-	<- ctx.Done()
-
 	ch := make(chan struct{})
-
-	go func ()  {
+	go func() {
 		tm.Next.ServeHTTP(w, r)
 		ch <- struct{}{}
 	}()
-
 	select {
-	case <- ch: 
-	return
-	case <- ctx.Done():
+	case <-ch:
+		return
+	case <-ctx.Done():
 		w.WriteHeader(http.StatusRequestTimeout)
 	}
+
 }
