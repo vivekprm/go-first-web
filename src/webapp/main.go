@@ -7,12 +7,13 @@ import (
 	"os"
 
 	"github.com/vivekprm/go-first-web/src/webapp/controller"
+	"github.com/vivekprm/go-first-web/src/webapp/middleware"
 )
 
 func main() {
 	templates := populateTemplates()
 	controller.Startup(templates)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8080", new(middleware.GzipMiddleware))
 }
 
 func populateTemplates() map[string]*template.Template{
