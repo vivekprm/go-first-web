@@ -1,19 +1,36 @@
 package main
 
 import (
+	"database/sql"
+	"fmt"
 	"html/template"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 
+	_ "github.com/lib/pq" // driver for postgres
+
 	"github.com/vivekprm/go-first-web/src/webapp/controller"
 	"github.com/vivekprm/go-first-web/src/webapp/middleware"
+	"github.com/vivekprm/go-first-web/src/webapp/model"
 )
 
 func main() {
 	templates := populateTemplates()
+	db := connectToDatabase()
+	defer db.Close()
 	controller.Startup(templates)
 	http.ListenAndServe(":8080", &middleware.TimeoutMiddleware{new(middleware.GzipMiddleware)})
+}
+
+func connectToDatabase() *sql.DB {
+	db, err := sql.Open("postgres", "postgres://lssuser:lsspasswd@localhost:5432/lssdb?sslmode=disable")
+	if err != nil {
+		log.Fatalln(fmt.Errorf("Unable to connect to database: %v", err))
+	}
+	model.SetDatabase(db)
+	return db
 }
 
 func populateTemplates() map[string]*template.Template{
