@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/vivekprm/go-first-web/src/webapp/model"
 	"github.com/vivekprm/go-first-web/src/webapp/viewmodel"
 )
 
@@ -42,10 +43,12 @@ func (h home) handleLogin(w http.ResponseWriter, r *http.Request) {
 		}
 		email := r.Form.Get("email")
 		password := r.Form.Get("password")
-		if email == "test@gmail.com" && password == "password" {
+		if user, err := model.Login(email, password); err == nil {
+			log.Printf("user has logged in: %v", user)
 			http.Redirect(w, r, "/home", http.StatusTemporaryRedirect)
 			return
 		} else {
+			log.Printf("failed log user in with email: %v, err: %v", email, err)
 			vm.Email = email
 			vm.Password = password
 		}
