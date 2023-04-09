@@ -42,6 +42,11 @@ func Login(email, password string) (*User, error) {
 	case err != nil:
 		return nil, err
 	}
-
+	t := time.Now()
+	_, err = db.Exec(`
+		UPDATE public.user set lastlogin=$1 WHERE id=$2`, t, result.ID) 
+	if err != nil {
+		log.Printf("failed to update login time for user %v to %v: %v", result.Email, t, err)
+	}	
 	return result, nil
 }
