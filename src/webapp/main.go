@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"os"
 
+	_ "net/http/pprof"
+
 	_ "github.com/lib/pq" // driver for postgres
 
 	"github.com/vivekprm/go-first-web/src/webapp/controller"
@@ -21,8 +23,9 @@ func main() {
 	db := connectToDatabase()
 	defer db.Close()
 	controller.Startup(templates)
+	go http.ListenAndServe(":8080", nil)
 	// http.ListenAndServe(":8000", &middleware.TimeoutMiddleware{new(middleware.GzipMiddleware)})
-	http.ListenAndServeTLS(":8443", "cert.pem", "key.pem", &middleware.TimeoutMiddleware{new(middleware.GzipMiddleware)})
+	http.ListenAndServeTLS(":8000", "cert.pem", "key.pem", &middleware.TimeoutMiddleware{new(middleware.GzipMiddleware)})
 }
 
 func connectToDatabase() *sql.DB {
